@@ -23,7 +23,7 @@ cars_data = {
         'image': static('main/img/audi.rs6.jpg'),
     },
     'bmw_m5': {
-        'name': 'BMW m5',
+        'name': 'BMW M5',
         'description': 'BMW M5 description',
         'image': static('main/img/bmw.m5.webp'),
     },
