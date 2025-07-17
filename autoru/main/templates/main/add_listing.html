@@ -1,0 +1,401 @@
+<!-- main/templates/main/add_listing.html -->
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Разместить объявление - Авто.ру{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="add-listing-page">
+        <div class="page-header">
+            <h1>Разместить объявление</h1>
+            <p class="subtitle">Заполните информацию о вашем автомобиле</p>
+        </div>
+
+        <form class="listing-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Шаг 1: Основная информация -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">1</span> Основная информация</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand">Марка *</label>
+                        <select id="brand" name="brand" class="form-select" required>
+                            <option value="">Выберите марку</option>
+                            <option value="bmw">BMW</option>
+                            <option value="mercedes">Mercedes-Benz</option>
+                            <option value="audi">Audi</option>
+                            <option value="toyota">Toyota</option>
+                            <option value="volkswagen">Volkswagen</option>
+                            <option value="hyundai">Hyundai</option>
+                            <option value="kia">Kia</option>
+                            <option value="ford">Ford</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="model">Модель *</label>
+                        <select id="model" name="model" class="form-select" required>
+                            <option value="">Сначала выберите марку</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year">Год выпуска *</label>
+                        <select id="year" name="year" class="form-select" required>
+                            <option value="">Выберите год</option>
+                            {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="body_type">Тип кузова *</label>
+                        <select id="body_type" name="body_type" class="form-select" required>
+                            <option value="">Выберите тип кузова</option>
+                            <option value="sedan">Седан</option>
+                            <option value="hatchback">Хэтчбек</option>
+                            <option value="suv">Внедорожник</option>
+                            <option value="wagon">Универсал</option>
+                            <option value="coupe">Купе</option>
+                            <option value="convertible">Кабриолет</option>
+                            <option value="minivan">Минивэн</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mileage">Пробег, км *</label>
+                        <input type="number" id="mileage" name="mileage" class="form-input" placeholder="Например: 50000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="color">Цвет *</label>
+                        <select id="color" name="color" class="form-select" required>
+                            <option value="">Выберите цвет</option>
+                            <option value="white">Белый</option>
+                            <option value="black">Черный</option>
+                            <option value="gray">Серый</option>
+                            <option value="silver">Серебристый</option>
+                            <option value="blue">Синий</option>
+                            <option value="red">Красный</option>
+                            <option value="green">Зеленый</option>
+                            <option value="brown">Коричневый</option>
+                            <option value="other">Другой</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Шаг 2: Технические характеристики -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">2</span> Технические характеристики</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="engine_type">Тип двигателя *</label>
+                        <select id="engine_type" name="engine_type" class="form-select" required>
+                            <option value="">Выберите тип двигателя</option>
+                            <option value="petrol">Бензин</option>
+                            <option value="diesel">Дизель</option>
+                            <option value="hybrid">Гибрид</option>
+                            <option value="electric">Электро</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="engine_volume">Объем двигателя, л</label>
+                        <input type="number" id="engine_volume" name="engine_volume" class="form-input" placeholder="Например: 2.0" step="0.1" min="0.1" max="10">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="transmission">Коробка передач *</label>
+                        <select id="transmission" name="transmission" class="form-select" required>
+                            <option value="">Выберите коробку передач</option>
+                            <option value="manual">Механика</option>
+                            <option value="automatic">Автомат</option>
+                            <option value="cvt">Вариатор</option>
+                            <option value="robot">Робот</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="drive">Привод *</label>
+                        <select id="drive" name="drive" class="form-select" required>
+                            <option value="">Выберите привод</option>
+                            <option value="front">Передний</option>
+                            <option value="rear">Задний</option>
+                            <option value="all">Полный</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="power">Мощность, л.с.</label>
+                        <input type="number" id="power" name="power" class="form-input" placeholder="Например: 150" min="1" max="2000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fuel_consumption">Расход топлива, л/100км</label>
+                        <input type="number" id="fuel_consumption" name="fuel_consumption" class="form-input" placeholder="Например: 8.5" step="0.1" min="1" max="50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Шаг 3: Состояние и история -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">3</span> Состояние и история</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="condition">Состояние *</label>
+                        <select id="condition" name="condition" class="form-select" required>
+                            <option value="">Выберите состояние</option>
+                            <option value="excellent">Отличное</option>
+                            <option value="good">Хорошее</option>
+                            <option value="fair">Удовлетворительное</option>
+                            <option value="poor">Требует ремонта</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="owners_count">Количество владельцев</label>
+                        <select id="owners_count" name="owners_count" class="form-select">
+                            <option value="">Не указано</option>
+                            <option value="1">1 владелец</option>
+                            <option value="2">2 владельца</option>
+                            <option value="3">3 владельца</option>
+                            <option value="4">4+ владельцев</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="accidents" value="1">
+                            <span class="checkmark"></span>
+                            Участвовал в ДТП
+                        </label>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="service_book" value="1">
+                            <span class="checkmark"></span>
+                            Сервисная книжка
+                        </label>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="warranty" value="1">
+                            <span class="checkmark"></span>
+                            На гарантии
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Шаг 4: Фотографии -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">4</span> Фотографии</h2>
+                    <p class="section-description">Добавьте качественные фотографии автомобиля. Первая фотография будет главной.</p>
+                </div>
+                
+                <div class="photo-upload">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Перетащите фотографии сюда или <span class="upload-link">выберите файлы</span></p>
+                            <input type="file" id="photos" name="photos" multiple accept="image/*" class="file-input">
+                        </div>
+                    </div>
+                    
+                    <div class="photo-preview" id="photoPreview"></div>
+                </div>
+            </div>
+
+            <!-- Шаг 5: Цена и контакты -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">5</span> Цена и контакты</h2>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Цена, ₽ *</label>
+                        <input type="number" id="price" name="price" class="form-input" placeholder="Например: 1500000" required min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price_negotiable">Торг</label>
+                        <select id="price_negotiable" name="price_negotiable" class="form-select">
+                            <option value="0">Цена окончательная</option>
+                            <option value="1">Возможен торг</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="seller_name">Ваше имя *</label>
+                        <input type="text" id="seller_name" name="seller_name" class="form-input" placeholder="Например: Иван" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Телефон *</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="+7 (999) 123-45-67" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="example@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Город *</label>
+                        <input type="text" id="location" name="location" class="form-input" placeholder="Например: Москва" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Шаг 6: Описание -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2><span class="step-number">6</span> Описание</h2>
+                    <p class="section-description">Расскажите подробнее о вашем автомобиле</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Описание автомобиля</label>
+                    <textarea id="description" name="description" class="form-textarea" rows="6" placeholder="Опишите состояние автомобиля, его особенности, причину продажи и другую важную информацию..."></textarea>
+                </div>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline">Предварительный просмотр</button>
+                <button type="submit" class="btn btn-primary">Разместить объявление</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Обработка загрузки фотографий
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('photos');
+    const photoPreview = document.getElementById('photoPreview');
+    
+    // Клик по области загрузки
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    // Drag & Drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('drag-over');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
+    
+    // Выбор файлов
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+    
+    function handleFiles(files) {
+        photoPreview.innerHTML = '';
+        Array.from(files).forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'photo-item';
+                    photoItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Фото ${index + 1}">
+                        <button type="button" class="remove-photo" onclick="removePhoto(this)">×</button>
+                        ${index === 0 ? '<span class="main-photo-badge">Главное фото</span>' : ''}
+                    `;
+                    photoPreview.appendChild(photoItem);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    // Зависимые селекты марка-модель
+    const brandSelect = document.getElementById('brand');
+    const modelSelect = document.getElementById('model');
+    
+    const models = {
+        'bmw': ['X1', 'X3', 'X5', 'X7', '3 Series', '5 Series', '7 Series'],
+        'mercedes': ['A-Class', 'C-Class', 'E-Class', 'S-Class', 'GLA', 'GLC', 'GLE'],
+        'audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8'],
+        'toyota': ['Camry', 'Corolla', 'RAV4', 'Highlander', 'Land Cruiser'],
+        'volkswagen': ['Polo', 'Golf', 'Passat', 'Tiguan', 'Touareg'],
+        'hyundai': ['Solaris', 'Elantra', 'Sonata', 'Tucson', 'Santa Fe'],
+        'kia': ['Rio', 'Cerato', 'Optima', 'Sportage', 'Sorento'],
+        'ford': ['Focus', 'Mondeo', 'EcoSport', 'Kuga', 'Explorer']
+    };
+    
+    brandSelect.addEventListener('change', function() {
+        const selectedBrand = this.value;
+        modelSelect.innerHTML = '<option value="">Выберите модель</option>';
+        
+        if (selectedBrand && models[selectedBrand]) {
+            models[selectedBrand].forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.toLowerCase().replace(/\s+/g, '-');
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+        }
+    });
+    
+    // Маска для телефона
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0) {
+            if (value[0] === '8') value = '7' + value.slice(1);
+            if (value[0] === '7') {
+                value = value.slice(0, 11);
+                const match = value.match(/^7(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+                if (match) {
+                    e.target.value = `+7${match[1] ? ` (${match[1]}` : ''}${match[2] ? `) ${match[2]}` : ''}${match[3] ? `-${match[3]}` : ''}${match[4] ? `-${match[4]}` : ''}`;
+                }
+            }
+        }
+    });
+});
+
+function removePhoto(button) {
+    button.parentElement.remove();
+}
+</script>
+{% endblock %}

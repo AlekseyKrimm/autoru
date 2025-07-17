@@ -11,4 +11,5 @@ urlpatterns = [
     path('cars/<str:car>/', views.car_page, name='car_page'),  # Маршрут для страниц автомобилей
     path('catalog/', views.catalog, name='catalog'),
     path('car/<int:car_id>/', views.car_detail, name='car_detail'),
+    path('add-listing/', views.add_listing, name='add_listing'),
 ]

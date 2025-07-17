@@ -1,7 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.templatetags.static import static
 from django.http import Http404
 from django.core.paginator import Paginator
+from django.contrib import messages
+from datetime import datetime
 
 # Словарь с данными автомобилей
 cars_data = {
@@ -307,3 +309,49 @@ def car_detail(request, car_id):
     else:
         from django.http import Http404
         raise Http404("Автомобиль не найден")
+
+def add_listing(request):
+    if request.method == 'POST':
+        # Обработка формы
+        listing_data = {
+            'brand': request.POST.get('brand'),
+            'model': request.POST.get('model'),
+            'year': request.POST.get('year'),
+            'body_type': request.POST.get('body_type'),
+            'mileage': request.POST.get('mileage'),
+            'color': request.POST.get('color'),
+            'engine_type': request.POST.get('engine_type'),
+            'engine_volume': request.POST.get('engine_volume'),
+            'transmission': request.POST.get('transmission'),
+            'drive': request.POST.get('drive'),
+            'power': request.POST.get('power'),
+            'fuel_consumption': request.POST.get('fuel_consumption'),
+            'condition': request.POST.get('condition'),
+            'owners_count': request.POST.get('owners_count'),
+            'accidents': request.POST.get('accidents') == '1',
+            'service_book': request.POST.get('service_book') == '1',
+            'warranty': request.POST.get('warranty') == '1',
+            'price': request.POST.get('price'),
+            'price_negotiable': request.POST.get('price_negotiable') == '1',
+            'seller_name': request.POST.get('seller_name'),
+            'phone': request.POST.get('phone'),
+            'email': request.POST.get('email'),
+            'location': request.POST.get('location'),
+            'description': request.POST.get('description'),
+            'photos': request.FILES.getlist('photos'),
+        }
+        
+        # Здесь бы сохранялись данные в базу данных
+        # Пока просто показываем сообщение об успехе
+        messages.success(request, 'Объявление успешно размещено!')
+        return redirect('main:catalog')
+    
+    # Генерируем годы для селекта
+    current_year = datetime.now().year
+    years = list(range(current_year, 1980, -1))
+    
+    context = {
+        'years': years,
+    }
+    
+    return render(request, 'main/add_listing.html', context)
