@@ -1,0 +1,20 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+
+
+{% block title %}{{ name }}{% endblock %}
+{% block content %}
+<body>
+   <div class="car-container">
+    <a href="javascript:history.back()" class="back-link">
+        <span class="back-arrow">←</span>
+        <span>Назад</span>
+    </a>
+        
+        <h1>{{ name }}</h1>
+        <img src="{{ image }}" alt="{{ name }}" class="car-image">
+        <p>{{ description }}</p>
+    </div>
+</body>
+{% endblock %}

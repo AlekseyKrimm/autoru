@@ -1,0 +1,92 @@
+<!-- main/templates/main/car_detail.html -->
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}{{ car.name }} - Авто.ру{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="car-detail">
+        <div class="breadcrumbs">
+            <a href="{% url 'main:home' %}">Главная</a> / 
+            <a href="{% url 'main:catalog' %}">Каталог</a> / 
+            <span>{{ car.name }}</span>
+        </div>
+        
+        <div class="car-detail-content">
+            <div class="car-gallery">
+                <div class="main-image">
+                    <img src="{% static car.main_image %}" alt="{{ car.name }}" id="mainImage">
+                </div>
+                <div class="image-thumbnails">
+                    {% for image in car.images %}
+                    <img src="{% static image %}" alt="{{ car.name }}" class="thumbnail" onclick="changeMainImage('{% static image %}')">
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="car-info">
+                <h1>{{ car.name }}</h1>
+                <div class="car-price">{{ car.price|floatformat:0 }} ₽</div>
+                
+                <div class="car-specs">
+                    <div class="spec-item">
+                        <span>Год выпуска:</span>
+                        <span>{{ car.year }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Пробег:</span>
+                        <span>{{ car.mileage|floatformat:0 }} км</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Двигатель:</span>
+                        <span>{{ car.engine }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Коробка передач:</span>
+                        <span>{{ car.transmission }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Привод:</span>
+                        <span>{{ car.drive }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Тип кузова:</span>
+                        <span>{{ car.body_type }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Цвет:</span>
+                        <span>{{ car.color }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span>Местоположение:</span>
+                        <span>{{ car.location }}</span>
+                    </div>
+                </div>
+                
+                <div class="seller-info">
+                    <h3>Продавец</h3>
+                    <p><strong>{{ car.seller_type }}:</strong> {{ car.seller_name }}</p>
+                    <button class="btn btn-primary" onclick="showPhone()">Показать телефон</button>
+                    <div id="phone-number" style="display: none;">{{ car.seller_phone }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="car-description">
+            <h2>Описание</h2>
+            <p>{{ car.description }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function changeMainImage(src) {
+    document.getElementById('mainImage').src = src;
+}
+
+function showPhone() {
+    document.getElementById('phone-number').style.display = 'block';
+}
+</script>
+{% endblock %}

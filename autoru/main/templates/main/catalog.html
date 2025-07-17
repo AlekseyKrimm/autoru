@@ -1,0 +1,240 @@
+<!-- main/templates/main/catalog.html -->
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Каталог автомобилей - Авто.ру{% endblock %}
+
+{% block content %}
+<!-- Фильтры -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-panel">
+            <div class="filters-header">
+                <h2>Фильтры</h2>
+                <button class="filters-reset">Сбросить все</button>
+            </div>
+            
+            <div class="filters-content">
+                <div class="filter-group">
+                    <h4>Марка и модель</h4>
+                    <select class="filter-select">
+                        <option>Все марки</option>
+                        <option>BMW</option>
+                        <option>Mercedes</option>
+                        <option>Audi</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Все модели</option>
+                        <option>X5</option>
+                        <option>E-Class</option>
+                        <option>A6</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Цена</h4>
+                    <div class="price-inputs">
+                        <input type="text" placeholder="от" class="price-input">
+                        <span>—</span>
+                        <input type="text" placeholder="до" class="price-input">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Год выпуска</h4>
+                    <div class="year-inputs">
+                        <select class="year-select">
+                            <option>от</option>
+                            <option>2020</option>
+                            <option>2019</option>
+                        </select>
+                        <select class="year-select">
+                            <option>до</option>
+                            <option>2023</option>
+                            <option>2022</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Пробег, км</h4>
+                    <div class="mileage-inputs">
+                        <input type="text" placeholder="от" class="mileage-input">
+                        <input type="text" placeholder="до" class="mileage-input">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Тип кузова</h4>
+                    <div class="body-types">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox">
+                            <span class="checkmark"></span>
+                            Седан
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox">
+                            <span class="checkmark"></span>
+                            Внедорожник
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox">
+                            <span class="checkmark"></span>
+                            Хэтчбек
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary filters-apply">Показать результаты</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Результаты поиска -->
+<section class="results-section">
+    <div class="container">
+        <div class="results-header">
+            <div class="results-info">
+                <h1>Автомобили с пробегом</h1>
+                <p class="results-count">Найдено {{ cars|length }} объявлений</p>
+            </div>
+            <div class="sorting">
+                <select class="sort-select">
+                    <option>По актуальности</option>
+                    <option>По цене: дешевле</option>
+                    <option>По цене: дороже</option>
+                    <option>По году: новее</option>
+                    <option>По пробегу</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="cars-list">
+            {% for car in cars %}
+            <div class="car-listing">
+                <div class="car-images">
+                    <div class="main-image">
+                        <img src="{% static car.main_image %}" alt="{{ car.name }}">
+                        <div class="images-count">
+                            <i class="fas fa-camera"></i>
+                            {{ car.images_count }}
+                        </div>
+                    </div>
+                    <div class="image-thumbnails">
+                        {% for thumb in car.thumbnails %}
+                        <img src="{% static thumb %}" alt="{{ car.name }}" class="thumbnail">
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="car-details">
+                    <div class="car-header">
+                        <h3 class="car-title">
+                            <a href="{% url 'main:car_detail' car.id %}">{{ car.name }}</a>
+                        </h3>
+                        <div class="car-badges">
+                            {% if car.is_new %}
+                            <span class="badge badge-new">Новый</span>
+                            {% endif %}
+                            {% if car.is_verified %}
+                            <span class="badge badge-verified">Проверен</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="car-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Год:</span>
+                            <span class="spec-value">{{ car.year }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Пробег:</span>
+                            <span class="spec-value">{{ car.mileage|floatformat:0 }} км</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Двигатель:</span>
+                            <span class="spec-value">{{ car.engine }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Коробка:</span>
+                            <span class="spec-value">{{ car.transmission }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Привод:</span>
+                            <span class="spec-value">{{ car.drive }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="car-description">
+                        <p>{{ car.description|truncatewords:20 }}</p>
+                    </div>
+                    
+                    <div class="car-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ car.location }}
+                    </div>
+                </div>
+                
+                <div class="car-price-section">
+                    <div class="price-info">
+                        <div class="current-price">{{ car.price|floatformat:0 }} ₽</div>
+                        {% if car.old_price %}
+                        <div class="old-price">{{ car.old_price|floatformat:0 }} ₽</div>
+                        {% endif %}
+                        <div class="price-note">{{ car.price_note }}</div>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <div class="seller-type">{{ car.seller_type }}</div>
+                        <div class="seller-name">{{ car.seller_name }}</div>
+                        <div class="seller-rating">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= car.seller_rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary btn-call">
+                            <i class="fas fa-phone"></i>
+                            Показать телефон
+                        </button>
+                        <button class="btn btn-outline btn-message">
+                            <i class="fas fa-envelope"></i>
+                            Написать
+                        </button>
+                        <button class="btn btn-favorite">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="listing-date">
+                        Размещено {{ car.created_at|date:"d.m.Y" }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Пагинация -->
+        <div class="pagination">
+            <button class="pagination-btn pagination-prev" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn pagination-current">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="pagination-dots">...</span>
+            <button class="pagination-btn">10</button>
+            <button class="pagination-btn pagination-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}

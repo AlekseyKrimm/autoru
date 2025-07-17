@@ -1,0 +1,33 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block content %}
+ <div class="creator-container">
+        <a href="{% url 'main:creators_list' %}"></a>
+        
+        <div class="creator-info">
+            <img src="{{ image }}" alt="{{ name }}" class="creator-logo">
+            <h1>{{ name }}</h1>
+            <p>{{ description }}</p>
+        </div>
+
+        <h2>Автомобили {{ name }}:</h2>
+        
+        {% if cars %}
+            <div class="cars-grid">
+                {% for car in cars %}
+                    <a href="{% url 'main:car_page' car.key %}" class="car-card">
+                        <img src="{{ car.image }}" alt="{{ car.name }}" class="car-image">
+                        <div class="car-name">{{ car.name }}</div>
+                        <div class="car-description">{{ car.description }}</div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>У этого производителя пока нет автомобилей в нашем каталоге.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

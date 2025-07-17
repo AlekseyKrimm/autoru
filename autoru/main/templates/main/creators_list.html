@@ -1,0 +1,23 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block static %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block title %}Производители{% endblock %}
+{% block content %}
+<body>
+    <h1>Производители</h1>
+    <div class="creators_logo">
+        <img class="mini_logo" src="{% static 'main/img/audi.lable.jpg' %}" alt="audi">
+        <span class="logo"><a href="creators/audi">Audi</a></span><br>
+        <img class="mini_logo" src="{% static 'main/img/bmw.lable.jpg' %}" alt="bmw">
+        <span class="logo"><a href="creators/bmw">BMW</a></span><br>
+        <img class="mini_logo" src="{% static 'main/img/mercedes.lable.jpg' %}" alt="mercedes">
+        <span class="logo"><a href="creators/mercedes">Mercedes</a></span>
+    </div>
+</body>
+{% endblock %}

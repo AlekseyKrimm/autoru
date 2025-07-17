@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main/css/main.css'%}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Kaushan+Script&family=Montserrat:ital@0;1&display=swap" rel="stylesheet">
+    <style>{% block style %}{% endblock %}</style>
+</head>
+<body>
+ <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="{% url 'main:home' %}">
+                        <span class="logo-text">Авто.ру</span>
+                    </a>
+                </div>
+                
+                <nav class="nav">
+                    <a href="{% url 'main:catalog' %}" class="nav-link">Каталог</a>
+                    <a href="#" class="nav-link">Новые</a>
+                    <a href="#" class="nav-link">С пробегом</a>
+                    <a href="#" class="nav-link">Коммерческие</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="btn btn-outline">Войти</button>
+                    <button class="btn btn-primary">Разместить объявление</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block content %}    
+        {% endblock %}
+    </main>
+ <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Покупателям</h4>
+                    <ul>
+                        <li><a href="#">Каталог автомобилей</a></li>
+                        <li><a href="#">Отзывы владельцев</a></li>
+                        <li><a href="#">Проверка VIN</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Продавцам</h4>
+                    <ul>
+                        <li><a href="#">Разместить объявление</a></li>
+                        <li><a href="#">Оценить автомобиль</a></li>
+                        <li><a href="#">Советы по продаже</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Компания</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+{% block content %}
+<!-- Поиск -->
+<section class="search-section">
+    <div class="container">
+        <div class="search-form">
+            <h1>Найдите автомобиль своей мечты</h1>
+            <form class="search-filters">
+                <div class="filter-row">
+                    <select class="filter-select">
+                        <option>Марка</option>
+                        <option>BMW</option>
+                        <option>Mercedes</option>
+                        <option>Audi</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Модель</option>
+                        <option>X5</option>
+                        <option>E-Class</option>
+                        <option>A6</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Год от</option>
+                        <option>2020</option>
+                        <option>2019</option>
+                        <option>2018</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Год до</option>
+                        <option>2023</option>
+                        <option>2022</option>
+                        <option>2021</option>
+                    </select>
+                </div>
+                <div class="filter-row">
+                    <input type="text" placeholder="Цена от" class="filter-input">
+                    <input type="text" placeholder="Цена до" class="filter-input">
+                    <select class="filter-select">
+                        <option>Регион</option>
+                        <option>Москва</option>
+                        <option>СПб</option>
+                        <option>Екатеринбург</option>
+                    </select>
+                    <button type="submit" class="btn btn-search">
+                        <i class="fas fa-search"></i> Найти
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Популярные марки -->
+<section class="brands-section">
+    <div class="container">
+        <h2>Популярные марки</h2>
+        <div class="brands-grid">
+            {% for brand in popular_brands %}
+            <div class="brand-card">
+                <img src="{% static brand.logo %}" alt="{{ brand.name }}">
+                <h3>{{ brand.name }}</h3>
+                <p>{{ brand.count }} объявлений</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Рекомендуемые автомобили -->
+<section class="recommended-section">
+    <div class="container">
+        <h2>Рекомендуемые автомобили</h2>
+        <div class="cars-grid">
+            {% for car in recommended_cars %}
+            <div class="car-card">
+                <div class="car-image-container">
+                    <img src="{% static car.image %}" alt="{{ car.name }}" class="car-image">
+                    <div class="car-badge">{{ car.year }}</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">{{ car.name }}</h3>
+                    <p class="car-specs">{{ car.engine }} • {{ car.transmission }} • {{ car.mileage }} км</p>
+                    <div class="car-price">{{ car.price|floatformat:0 }} ₽</div>
+                    <p class="car-location">{{ car.location }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
