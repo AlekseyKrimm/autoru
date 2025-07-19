@@ -12,7 +12,16 @@
             <p class="subtitle">Заполните информацию о вашем автомобиле</p>
         </div>
 
-        <form class="listing-form" method="post" enctype="multipart/form-data">
+        <!-- Общие ошибки формы -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form class="listing-form" method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             
             <!-- Шаг 1: Основная информация -->
@@ -23,380 +32,532 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="brand">Марка *</label>
-                        <select id="brand" name="brand" class="form-select" required>
-                            <option value="">Выберите марку</option>
-                            <option value="bmw">BMW</option>
-                            <option value="mercedes">Mercedes-Benz</option>
-                            <option value="audi">Audi</option>
-                            <option value="toyota">Toyota</option>
-                            <option value="volkswagen">Volkswagen</option>
-                            <option value="hyundai">Hyundai</option>
-                            <option value="kia">Kia</option>
-                            <option value="ford">Ford</option>
-                        </select>
+                        <label for="{{ form.brand.id_for_label }}">Марка</label>
+                        {{ form.brand }}
+                        {% if form.brand.errors %}
+                            <div class="field-errors">
+                                {% for error in form.brand.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="form-group">
-                        <label for="model">Модель *</label>
-                        <select id="model" name="model" class="form-select" required>
+                        <label for="{{ form.model.id_for_label }}">Модель</label>
+                        <select id="{{ form.model.id_for_label }}" name="{{ form.model.name }}" class="form-select" required>
                             <option value="">Сначала выберите марку</option>
-                            <option value="">Любая марка</option>
                         </select>
+                        {% if form.model.errors %}
+                            <div class="field-errors">
+                                {% for error in form.model.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="year">Год выпуска *</label>
-                        <select id="year" name="year" class="form-select" required>
-                            <option value="">Выберите год</option>
-                            {% for year in years %}
-                            <option value="{{ year }}">{{ year }}</option>
-                            {% endfor %}
-                        </select>
+                        <label for="{{ form.year.id_for_label }}">Год выпуска</label>
+                        {{ form.year }}
+                        {% if form.year.errors %}
+                            <div class="field-errors">
+                                {% for error in form.year.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="form-group">
-                        <label for="body_type">Тип кузова *</label>
-                        <select id="body_type" name="body_type" class="form-select" required>
-                            <option value="">Выберите тип кузова</option>
-                            <option value="sedan">Седан</option>
-                            <option value="hatchback">Хэтчбек</option>
-                            <option value="suv">Внедорожник</option>
-                            <option value="wagon">Универсал</option>
-                            <option value="coupe">Купе</option>
-                            <option value="convertible">Кабриолет</option>
-                            <option value="minivan">Минивэн</option>
-                        </select>
+                        <label for="{{ form.body_type.id_for_label }}">Тип кузова</label>
+                        {{ form.body_type }}
+                        {% if form.body_type.errors %}
+                            <div class="field-errors">
+                                {% for error in form.body_type.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="mileage">Пробег, км *</label>
-                        <input type="number" id="mileage" name="mileage" class="form-input" placeholder="Например: 50000" required>
+                        <label for="{{ form.mileage.id_for_label }}">Пробег</label>
+                        {{ form.mileage }}
+                        {% if form.mileage.errors %}
+                            <div class="field-errors">
+                                {% for error in form.mileage.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="form-group">
-                        <label for="color">Цвет *</label>
-                        <select id="color" name="color" class="form-select" required>
-                            <option value="">Выберите цвет</option>
-                            <option value="white">Белый</option>
-                            <option value="black">Черный</option>
-                            <option value="gray">Серый</option>
-                            <option value="silver">Серебристый</option>
-                            <option value="blue">Синий</option>
-                            <option value="red">Красный</option>
-                            <option value="green">Зеленый</option>
-                            <option value="brown">Коричневый</option>
-                            <option value="other">Другой</option>
-                        </select>
+                        <label for="{{ form.color.id_for_label }}">Цвет кузова</label>
+                        {{ form.color }}
+                        {% if form.color.errors %}
+                            <div class="field-errors">
+                                {% for error in form.color.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.engine_type.id_for_label }}">Тип двигателя</label>
+                        {{ form.engine_type }}
+                        {% if form.engine_type.errors %}
+                            <div class="field-errors">
+                                {% for error in form.engine_type.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.engine_volume.id_for_label }}">Объем двигателя</label>
+                        {{ form.engine_volume }}
+                        {% if form.engine_volume.errors %}
+                            <div class="field-errors">
+                                {% for error in form.engine_volume.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.transmission.id_for_label }}">Коробка передач</label>
+                        {{ form.transmission }}
+                        {% if form.transmission.errors %}
+                            <div class="field-errors">
+                                {% for error in form.transmission.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.drive.id_for_label }}">Привод</label>
+                        {{ form.drive }}
+                        {% if form.drive.errors %}
+                            <div class="field-errors">
+                                {% for error in form.drive.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.power.id_for_label }}">Количество лошадиных сил</label>
+                        {{ form.power }}
+                        {% if form.power.errors %}
+                            <div class="field-errors">
+                                {% for error in form.power.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.fuel_consumption.id_for_label }}">Расход топлива</label>
+                        {{ form.fuel_consumption }}
+                        {% if form.fuel_consumption.errors %}
+                            <div class="field-errors">
+                                {% for error in form.fuel_consumption.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.condition.id_for_label }}">Состояние</label>
+                        {{ form.condition }}
+                        {% if form.condition.errors %}
+                            <div class="field-errors">
+                                {% for error in form.condition.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.owners_count.id_for_label }}">Количество владельцев</label>
+                        {{ form.owners_count }}
+                        {% if form.owners_count.errors %}
+                            <div class="field-errors">
+                                {% for error in form.owners_count.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.accidents.id_for_label }}">Участие в ДТП</label>
+                        {{ form.accidents }}
+                        {% if form.accidents.errors %}
+                            <div class="field-errors">
+                                {% for error in form.accidents.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.service_book.id_for_label }}">Сервисная книжка</label>
+                        {{ form.service_book }}
+                        {% if form.service_book.errors %}
+                            <div class="field-errors">
+                                {% for error in form.service_book.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.warranty.id_for_label }}">Гарантия</label>
+                        {{ form.warranty }}
+                        {% if form.warranty.errors %}
+                            <div class="field-errors">
+                                {% for error in form.warranty.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.price.id_for_label }}">Цена</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="field-errors">
+                                {% for error in form.price.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.seller_name.id_for_label }}">Продавец</label>
+                        {{ form.seller_name }}
+                        {% if form.seller_name.errors %}
+                            <div class="field-errors">
+                                {% for error in form.seller_name.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Телефон</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="field-errors">
+                                {% for error in form.phone.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="field-errors">
+                                {% for error in form.email.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.location.id_for_label }}">Адрес</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="field-errors">
+                                {% for error in form.location.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}">Комментарий продавца</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="field-errors">
+                                {% for error in form.description.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Шаг 2: Технические характеристики -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><span class="step-number">2</span> Технические характеристики</h2>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="engine_type">Тип двигателя *</label>
-                        <select id="engine_type" name="engine_type" class="form-select" required>
-                            <option value="">Выберите тип двигателя</option>
-                            <option value="petrol">Бензин</option>
-                            <option value="diesel">Дизель</option>
-                            <option value="hybrid">Гибрид</option>
-                            <option value="electric">Электро</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="engine_volume">Объем двигателя, л</label>
-                        <input type="number" id="engine_volume" name="engine_volume" class="form-input" placeholder="Например: 2.0" step="0.1" min="0.1" max="10">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="transmission">Коробка передач *</label>
-                        <select id="transmission" name="transmission" class="form-select" required>
-                            <option value="">Выберите коробку передач</option>
-                            <option value="manual">Механика</option>
-                            <option value="automatic">Автомат</option>
-                            <option value="cvt">Вариатор</option>
-                            <option value="robot">Робот</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="drive">Привод *</label>
-                        <select id="drive" name="drive" class="form-select" required>
-                            <option value="">Выберите привод</option>
-                            <option value="front">Передний</option>
-                            <option value="rear">Задний</option>
-                            <option value="all">Полный</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="power">Мощность, л.с.</label>
-                        <input type="number" id="power" name="power" class="form-input" placeholder="Например: 150" min="1" max="2000">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="fuel_consumption">Расход топлива, л/100км</label>
-                        <input type="number" id="fuel_consumption" name="fuel_consumption" class="form-input" placeholder="Например: 8.5" step="0.1" min="1" max="50">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Шаг 3: Состояние и история -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><span class="step-number">3</span> Состояние и история</h2>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="condition">Состояние *</label>
-                        <select id="condition" name="condition" class="form-select" required>
-                            <option value="">Выберите состояние</option>
-                            <option value="excellent">Отличное</option>
-                            <option value="good">Хорошее</option>
-                            <option value="fair">Удовлетворительное</option>
-                            <option value="poor">Требует ремонта</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="owners_count">Количество владельцев</label>
-                        <select id="owners_count" name="owners_count" class="form-select">
-                            <option value="">Не указано</option>
-                            <option value="1">1 владелец</option>
-                            <option value="2">2 владельца</option>
-                            <option value="3">3 владельца</option>
-                            <option value="4">4+ владельцев</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="accidents" value="1">
-                            <span class="checkmark"></span>
-                            Участвовал в ДТП
-                        </label>
-                        
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="service_book" value="1">
-                            <span class="checkmark"></span>
-                            Сервисная книжка
-                        </label>
-                        
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="warranty" value="1">
-                            <span class="checkmark"></span>
-                            На гарантии
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Шаг 4: Фотографии -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><span class="step-number">4</span> Фотографии</h2>
-                    <p class="section-description">Добавьте качественные фотографии автомобиля. Первая фотография будет главной.</p>
-                </div>
-                
-                <div class="photo-upload">
-                    <div class="upload-area" id="uploadArea">
-                        <div class="upload-content">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Перетащите фотографии сюда или <span class="upload-link">выберите файлы</span></p>
-                            <input type="file" id="photos" name="photos" multiple accept="image/*" class="file-input">
-                        </div>
-                    </div>
-                    
-                    <div class="photo-preview" id="photoPreview"></div>
-                </div>
-            </div>
-
-            <!-- Шаг 5: Цена и контакты -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><span class="step-number">5</span> Цена и контакты</h2>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="price">Цена, ₽ *</label>
-                        <input type="number" id="price" name="price" class="form-input" placeholder="Например: 1500000" required min="1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="price_negotiable">Торг</label>
-                        <select id="price_negotiable" name="price_negotiable" class="form-select">
-                            <option value="0">Цена окончательная</option>
-                            <option value="1">Возможен торг</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="seller_name">Ваше имя *</label>
-                        <input type="text" id="seller_name" name="seller_name" class="form-input" placeholder="Например: Иван" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Телефон *</label>
-                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="+7 (999) 123-45-67" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="example@email.com">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="location">Город *</label>
-                        <input type="text" id="location" name="location" class="form-input" placeholder="Например: Москва" required>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Шаг 6: Описание -->
-            <div class="form-section">
-                <div class="section-header">
-                    <h2><span class="step-number">6</span> Описание</h2>
-                    <p class="section-description">Расскажите подробнее о вашем автомобиле</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Описание автомобиля</label>
-                    <textarea id="description" name="description" class="form-textarea" rows="6" placeholder="Опишите состояние автомобиля, его особенности, причину продажи и другую важную информацию..."></textarea>
-                </div>
-            </div>
-
+            <!-- Остальные секции аналогично... -->
+            
             <!-- Кнопки -->
             <div class="form-actions">
-                <button type="button" class="btn btn-outline">Предварительный просмотр</button>
+                <button type="button" class="btn btn-outline" onclick="validateForm()">Проверить форму</button>
                 <button type="submit" class="btn btn-primary">Разместить объявление</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- В конце шаблона add_listing.html, перед закрывающим тегом </body> -->
 <script>
-// Обработка загрузки фотографий
 document.addEventListener('DOMContentLoaded', function() {
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('photos');
-    const photoPreview = document.getElementById('photoPreview');
+    // ========== ЗАВИСИМЫЕ СЕЛЕКТЫ МАРКА-МОДЕЛЬ ==========
+    const brandSelect = document.getElementById('id_brand'); // Django создает id с префиксом id_
+    const modelSelect = document.getElementById('id_model');
     
-    // Клик по области загрузки
-    uploadArea.addEventListener('click', () => fileInput.click());
+    // Данные моделей для каждой марки
+    const modelsData = {
+        'bmw': [
+            {value: 'x1', text: 'X1'},
+            {value: 'x3', text: 'X3'},
+            {value: 'x5', text: 'X5'},
+            {value: 'x7', text: 'X7'},
+            {value: '3-series', text: '3 Series'},
+            {value: '5-series', text: '5 Series'},
+            {value: '7-series', text: '7 Series'},
+            {value: 'z4', text: 'Z4'}
+        ],
+        'mercedes': [
+            {value: 'a-class', text: 'A-Class'},
+            {value: 'c-class', text: 'C-Class'},
+            {value: 'e-class', text: 'E-Class'},
+            {value: 's-class', text: 'S-Class'},
+            {value: 'gla', text: 'GLA'},
+            {value: 'glc', text: 'GLC'},
+            {value: 'gle', text: 'GLE'},
+            {value: 'gls', text: 'GLS'}
+        ],
+        'audi': [
+            {value: 'a1', text: 'A1'},
+            {value: 'a3', text: 'A3'},
+            {value: 'a4', text: 'A4'},
+            {value: 'a6', text: 'A6'},
+            {value: 'a8', text: 'A8'},
+            {value: 'q3', text: 'Q3'},
+            {value: 'q5', text: 'Q5'},
+            {value: 'q7', text: 'Q7'},
+            {value: 'q8', text: 'Q8'}
+        ],
+        'toyota': [
+            {value: 'camry', text: 'Camry'},
+            {value: 'corolla', text: 'Corolla'},
+            {value: 'rav4', text: 'RAV4'},
+            {value: 'highlander', text: 'Highlander'},
+            {value: 'land-cruiser', text: 'Land Cruiser'},
+            {value: 'prius', text: 'Prius'}
+        ],
+        'volkswagen': [
+            {value: 'polo', text: 'Polo'},
+            {value: 'golf', text: 'Golf'},
+            {value: 'passat', text: 'Passat'},
+            {value: 'tiguan', text: 'Tiguan'},
+            {value: 'touareg', text: 'Touareg'}
+        ],
+        'hyundai': [
+            {value: 'solaris', text: 'Solaris'},
+            {value: 'elantra', text: 'Elantra'},
+            {value: 'sonata', text: 'Sonata'},
+            {value: 'tucson', text: 'Tucson'},
+            {value: 'santa-fe', text: 'Santa Fe'},
+            {value: 'creta', text: 'Creta'}
+        ],
+        'kia': [
+            {value: 'rio', text: 'Rio'},
+            {value: 'cerato', text: 'Cerato'},
+            {value: 'optima', text: 'Optima'},
+            {value: 'sportage', text: 'Sportage'},
+            {value: 'sorento', text: 'Sorento'},
+            {value: 'seltos', text: 'Seltos'}
+        ],
+        'ford': [
+            {value: 'focus', text: 'Focus'},
+            {value: 'mondeo', text: 'Mondeo'},
+            {value: 'ecosport', text: 'EcoSport'},
+            {value: 'kuga', text: 'Kuga'},
+            {value: 'explorer', text: 'Explorer'},
+            {value: 'mustang', text: 'Mustang'}
+        ]
+    };
     
-    // Drag & Drop
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
+    // Функция обновления моделей
+    function updateModels(selectedBrand) {
+        // Очищаем селект моделей
+        modelSelect.innerHTML = '<option value="">Выберите модель</option>';
+        
+        if (selectedBrand && modelsData[selectedBrand]) {
+            // Добавляем модели для выбранной марки
+            modelsData[selectedBrand].forEach(function(model) {
+                const option = document.createElement('option');
+                option.value = model.value;
+                option.textContent = model.text;
+                modelSelect.appendChild(option);
+            });
+            
+            // Включаем селект моделей
+            modelSelect.disabled = false;
+        } else {
+            // Отключаем селект моделей
+            modelSelect.disabled = true;
+        }
+    }
     
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('drag-over');
-    });
+    // Обработчик изменения марки
+    if (brandSelect) {
+        brandSelect.addEventListener('change', function() {
+            const selectedBrand = this.value;
+            updateModels(selectedBrand);
+            console.log('Выбрана марка:', selectedBrand); // Для отладки
+        });
+        
+        // Инициализация при загрузке (если марка уже выбрана)
+        if (brandSelect.value) {
+            updateModels(brandSelect.value);
+        }
+    }
     
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        handleFiles(files);
-    });
+    // ========== МАСКА ДЛЯ ТЕЛЕФОНА ==========
+    const phoneInput = document.getElementById('id_phone');
     
-    // Выбор файлов
-    fileInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
-    });
-    
-    function handleFiles(files) {
-        photoPreview.innerHTML = '';
-        Array.from(files).forEach((file, index) => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const photoItem = document.createElement('div');
-                    photoItem.className = 'photo-item';
-                    photoItem.innerHTML = `
-                        <img src="${e.target.result}" alt="Фото ${index + 1}">
-                        <button type="button" class="remove-photo" onclick="removePhoto(this)">×</button>
-                        ${index === 0 ? '<span class="main-photo-badge">Главное фото</span>' : ''}
-                    `;
-                    photoPreview.appendChild(photoItem);
-                };
-                reader.readAsDataURL(file);
+    if (phoneInput) {
+        // Функция для форматирования номера телефона
+        function formatPhone(value) {
+            // Убираем все символы кроме цифр
+            const numbers = value.replace(/\D/g, '');
+            
+            // Если номер начинается с 8, заменяем на 7
+            let formattedNumbers = numbers;
+            if (numbers.startsWith('8')) {
+                formattedNumbers = '7' + numbers.slice(1);
             }
+            
+            // Ограничиваем длину до 11 цифр
+            formattedNumbers = formattedNumbers.slice(0, 11);
+            
+            // Форматируем номер
+            if (formattedNumbers.length === 0) {
+                return '';
+            } else if (formattedNumbers.length <= 1) {
+                return '+7';
+            } else if (formattedNumbers.length <= 4) {
+                return `+7 (${formattedNumbers.slice(1)}`;
+            } else if (formattedNumbers.length <= 7) {
+                return `+7 (${formattedNumbers.slice(1, 4)}) ${formattedNumbers.slice(4)}`;
+            } else if (formattedNumbers.length <= 9) {
+                return `+7 (${formattedNumbers.slice(1, 4)}) ${formattedNumbers.slice(4, 7)}-${formattedNumbers.slice(7)}`;
+            } else {
+                return `+7 (${formattedNumbers.slice(1, 4)}) ${formattedNumbers.slice(4, 7)}-${formattedNumbers.slice(7, 9)}-${formattedNumbers.slice(9, 11)}`;
+            }
+        }
+        
+        // Обработчик ввода
+        phoneInput.addEventListener('input', function(e) {
+            const cursorPosition = e.target.selectionStart;
+            const oldValue = e.target.value;
+            const newValue = formatPhone(oldValue);
+            
+            e.target.value = newValue;
+            
+            // Восстанавливаем позицию курсора
+            const newCursorPosition = cursorPosition + (newValue.length - oldValue.length);
+            e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+            
+            console.log('Телефон отформатирован:', newValue); // Для отладки
+        });
+        
+        // Обработчик фокуса (устанавливаем +7 если поле пустое)
+        phoneInput.addEventListener('focus', function(e) {
+            if (e.target.value === '') {
+                e.target.value = '+7 ';
+            }
+        });
+        
+        // Обработчик потери фокуса
+        phoneInput.addEventListener('blur', function(e) {
+            if (e.target.value === '+7 ' || e.target.value === '+7') {
+                e.target.value = '';
+            }
+        });
+        
+        // Обработчик нажатия клавиш
+        phoneInput.addEventListener('keydown', function(e) {
+            // Разрешаем: backspace, delete, tab, escape, enter
+            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                // Разрешаем: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                (e.keyCode === 67 && e.ctrlKey === true) ||
+                (e.keyCode === 86 && e.ctrlKey === true) ||
+                (e.keyCode === 88 && e.ctrlKey === true) ||
+                // Разрешаем: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                return;
+            }
+            
+            // Запрещаем все, кроме цифр
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+        
+        // Запрещаем вставку некорректных данных
+        phoneInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const formatted = formatPhone(paste);
+            e.target.value = formatted;
         });
     }
     
-    // Зависимые селекты марка-модель
-    const brandSelect = document.getElementById('brand');
-    const modelSelect = document.getElementById('model');
-    
-    const models = {
-        'bmw': ['X1', 'X3', 'X5', 'X7', 'X8' '3 Series', '5 Series', '7 Series'],
-        'mercedes': ['A-Class', 'C-Class', 'E-Class', 'S-Class', 'GLA', 'GLC', 'GLE'],
-        'audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8'],
-        'toyota': ['Camry', 'Corolla', 'RAV4', 'Highlander', 'Land Cruiser'],
-        'volkswagen': ['Polo', 'Golf', 'Passat', 'Tiguan', 'Touareg'],
-        'hyundai': ['Solaris', 'Elantra', 'Sonata', 'Tucson', 'Santa Fe'],
-        'kia': ['Rio', 'Cerato', 'Optima', 'Sportage', 'Sorento'],
-        'ford': ['Focus', 'Mondeo', 'EcoSport', 'Kuga', 'Explorer']
-    };
-    
-    brandSelect.addEventListener('change', function() {
-        const selectedBrand = this.value;
-        modelSelect.innerHTML = '<option value="">Выберите модель</option>';
+    // ========== ГЕНЕРАЦИЯ ГОДОВ ДЛЯ СЕЛЕКТА ==========
+    const yearSelect = document.getElementById('id_year');
+    if (yearSelect && yearSelect.children.length <= 1) { // Если опции не заполнены
+        const currentYear = new Date().getFullYear();
         
-        if (selectedBrand && models[selectedBrand]) {
-            models[selectedBrand].forEach(model => {
-                const option = document.createElement('option');
-                option.value = model.toLowerCase().replace(/\s+/g, '-');
-                option.textContent = model;
-                modelSelect.appendChild(option);
-            });
+        // Очищаем селект
+        yearSelect.innerHTML = '<option value="">Выберите год</option>';
+        
+        // Добавляем годы от текущего до 1980
+        for (let year = currentYear + 1; year >= 1980; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
         }
-    });
+    }
     
-    // Маска для телефона
-    const phoneInput = document.getElementById('phone');
-    phoneInput.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 0) {
-            if (value[0] === '8') value = '7' + value.slice(1);
-            if (value[0] === '7') {
-                value = value.slice(0, 11);
-                const match = value.match(/^7(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
-                if (match) {
-                    e.target.value = `+7${match[1] ? ` (${match[1]}` : ''}${match[2] ? `) ${match[2]}` : ''}${match[3] ? `-${match[3]}` : ''}${match[4] ? `-${match[4]}` : ''}`;
-                }
-            }
-        }
-    });
+    // ========== ОТЛАДОЧНАЯ ИНФОРМАЦИЯ ==========
+    console.log('Элементы найдены:');
+    console.log('brandSelect:', brandSelect);
+    console.log('modelSelect:', modelSelect);
+    console.log('phoneInput:', phoneInput);
+    console.log('yearSelect:', yearSelect);
 });
-
-function removePhoto(button) {
-    button.parentElement.remove();
-}
 </script>
 {% endblock %}

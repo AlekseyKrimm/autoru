@@ -4,6 +4,9 @@ from django.http import Http404
 from django.core.paginator import Paginator
 from django.contrib import messages
 from datetime import datetime
+from django.http import JsonResponse
+from .forms import CarListingForm
+import json
 
 # Словарь с данными автомобилей
 cars_data = {
@@ -355,3 +358,47 @@ def add_listing(request):
     }
     
     return render(request, 'main/add_listing.html', context)
+
+
+def add_listing(request):
+    if request.method == 'POST':
+        form = CarListingForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            # Данные прошли валидацию
+            cleaned_data = form.cleaned_data
+            
+            # Здесь бы сохранялись данные в базу данных
+            # listing = CarListing.objects.create(**cleaned_data)
+            
+            messages.success(request, 'Объявление успешно размещено!')
+            return redirect('main:catalog')
+        else:
+            # Форма содержит ошибки
+            messages.error(request, 'Пожалуйста, исправьте ошибки в форме')
+    else:
+        form = CarListingForm()
+    
+    context = {
+        'form': form,
+    }
+    
+    return render(request, 'main/add_listing.html', context)
+
+# AJAX валидация для отдельных полей
+def validate_field(request):
+    if request.method == 'POST':
+        field_name = request.POST.get('field_name')
+        field_value = request.POST.get('field_value')
+        
+        form = CarListingForm({field_name: field_value})
+        
+        if form.is_valid():
+            return JsonResponse({'valid': True})
+        else:
+            errors = form.errors.get(field_name, [])
+            return JsonResponse({'valid': False, 'errors': errors})
+    
+    return JsonResponse({'valid': False, 'errors': ['Неверный запрос']})
+
+        

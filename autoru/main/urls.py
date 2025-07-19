@@ -12,4 +12,5 @@ urlpatterns = [
     path('catalog/', views.catalog, name='catalog'),
     path('car/<int:car_id>/', views.car_detail, name='car_detail'),
     path('add-listing/', views.add_listing, name='add_listing'),
+    path('validate-field/', views.validate_field, name='validate_field'),
 ]
